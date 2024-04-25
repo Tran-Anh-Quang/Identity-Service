@@ -3,6 +3,8 @@ package com.quangta.service.impl;
 import com.quangta.dto.request.UserCreationRequest;
 import com.quangta.dto.request.UserUpdateRequest;
 import com.quangta.entity.User;
+import com.quangta.exception.AppException;
+import com.quangta.exception.ErrorCode;
 import com.quangta.repository.UserRepository;
 import com.quangta.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -17,11 +19,11 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
-    public User createRequest(UserCreationRequest request) {
+    public User createUser(UserCreationRequest request) {
         User user = new User();
 
         if(userRepository.existsByUsername(request.getUsername())) {
-            throw new RuntimeException("Username already exists");
+            throw new AppException(ErrorCode.USER_EXISTED);
         }
 
         user.setUsername(request.getUsername());
@@ -41,13 +43,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserById(String userId) {
-        return userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        return userRepository.findById(userId).orElseThrow(RuntimeException::new);
     }
 
     @Override
     public User updateUser(String userId, UserUpdateRequest request) {
         User user = userRepository.findById(userId).get();
-
 
         user.setUsername(request.getUsername());
         user.setPassword(request.getPassword());

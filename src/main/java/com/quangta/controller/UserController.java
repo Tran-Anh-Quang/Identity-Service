@@ -2,6 +2,7 @@ package com.quangta.controller;
 
 import com.quangta.dto.request.UserCreationRequest;
 import com.quangta.dto.request.UserUpdateRequest;
+import com.quangta.dto.response.ApiResponse;
 import com.quangta.entity.User;
 import com.quangta.service.UserService;
 import jakarta.validation.Valid;
@@ -21,9 +22,14 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/create")
-    public ResponseEntity<User> createUser(@RequestBody @Valid  UserCreationRequest request){
-        User user = userService.createRequest(request);
-        return new ResponseEntity<>(user, null, HttpStatus.CREATED);
+    public ApiResponse<User> createUser(@RequestBody @Valid  UserCreationRequest request){
+        ApiResponse<User> userApiResponse = new ApiResponse<>();
+
+        userApiResponse.setResult(userService.createUser(request));
+        userApiResponse.setMessage("Success");
+        userApiResponse.setCode(200);
+        
+        return userApiResponse;
     }
 
     @GetMapping

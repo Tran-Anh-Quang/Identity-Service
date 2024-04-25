@@ -7,7 +7,7 @@ import com.quangta.entity.User;
 import java.util.List;
 
 public interface UserService {
-    User createRequest(UserCreationRequest request);
+    User createUser(UserCreationRequest request);
 
     List<User> getAllUsers();
 
