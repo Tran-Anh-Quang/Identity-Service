@@ -5,7 +5,6 @@ import com.quangta.dto.request.UserUpdateRequest;
 import com.quangta.dto.response.UserResponse;
 import com.quangta.entity.User;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
