@@ -2,36 +2,36 @@ package com.quangta.service.impl;
 
 import com.quangta.dto.request.UserCreationRequest;
 import com.quangta.dto.request.UserUpdateRequest;
+import com.quangta.dto.response.UserResponse;
 import com.quangta.entity.User;
 import com.quangta.exception.AppException;
 import com.quangta.exception.ErrorCode;
+import com.quangta.mapper.UserMapper;
 import com.quangta.repository.UserRepository;
 import com.quangta.service.UserService;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserServiceImpl implements UserService {
 
-    private final UserRepository userRepository;
+    UserRepository userRepository;
+
+    UserMapper userMapper;
 
     @Override
     public User createUser(UserCreationRequest request) {
-        User user = new User();
-
         if(userRepository.existsByUsername(request.getUsername())) {
             throw new AppException(ErrorCode.USER_EXISTED);
         }
 
-        user.setUsername(request.getUsername());
-        user.setPassword(request.getPassword());
-        user.setLastName(request.getLastName());
-        user.setFirstName(request.getFirstName());
-        user.setEmail(request.getEmail());
-        user.setDob(request.getDob());
+        User user = userMapper.createUser(request);
 
         return userRepository.save(user);
     }
@@ -42,22 +42,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserById(String userId) {
-        return userRepository.findById(userId).orElseThrow(RuntimeException::new);
+    public UserResponse getUserById(String userId) {
+        return userMapper.mapToUserResponse(
+                userRepository.findById(userId).orElseThrow(RuntimeException::new)
+        );
     }
 
     @Override
-    public User updateUser(String userId, UserUpdateRequest request) {
-        User user = userRepository.findById(userId).get();
+    public UserResponse updateUser(String userId, UserUpdateRequest request) {
+        User user = userRepository.findById(userId).orElseThrow(RuntimeException::new);
 
-        user.setUsername(request.getUsername());
-        user.setPassword(request.getPassword());
-        user.setLastName(request.getLastName());
-        user.setFirstName(request.getFirstName());
-        user.setEmail(request.getEmail());
-        user.setDob(request.getDob());
+        userMapper.updateUser(user, request);
 
-        return userRepository.save(user);
+        return userMapper.mapToUserResponse(userRepository.save(user));
     }
 
     @Override

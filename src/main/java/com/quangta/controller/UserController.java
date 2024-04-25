@@ -3,10 +3,13 @@ package com.quangta.controller;
 import com.quangta.dto.request.UserCreationRequest;
 import com.quangta.dto.request.UserUpdateRequest;
 import com.quangta.dto.response.ApiResponse;
+import com.quangta.dto.response.UserResponse;
 import com.quangta.entity.User;
 import com.quangta.service.UserService;
 import jakarta.validation.Valid;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,10 +19,11 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequestMapping("/api/v1/users")
 public class UserController {
 
-    private final UserService userService;
+    UserService userService;
 
     @PostMapping("/create")
     public ApiResponse<User> createUser(@RequestBody @Valid  UserCreationRequest request){
@@ -27,8 +31,8 @@ public class UserController {
 
         userApiResponse.setResult(userService.createUser(request));
         userApiResponse.setMessage("Success");
-        userApiResponse.setCode(200);
-        
+        userApiResponse.setCode(1000);
+
         return userApiResponse;
     }
 
@@ -39,18 +43,16 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<User> getUserById(@PathVariable String userId){
-        User user = userService.getUserById(userId);
-        return new ResponseEntity<>(user, null, 200);
+    public UserResponse getUserById(@PathVariable String userId){
+        return userService.getUserById(userId);
     }
 
     @PutMapping("/update/{userId}")
-    public ResponseEntity<User> updateUser(
+    public UserResponse updateUser(
             @PathVariable String userId,
             @RequestBody UserUpdateRequest request
     ){
-        User user = userService.updateUser(userId,request);
-        return new ResponseEntity<>(user, null, HttpStatus.OK);
+        return userService.updateUser(userId,request);
     }
 
     @DeleteMapping("/delete/{userId}")

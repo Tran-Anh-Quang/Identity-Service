@@ -1,22 +1,27 @@
 package com.quangta.dto.request;
 
 import jakarta.validation.constraints.Size;
-import lombok.Data;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserCreationRequest {
-    private Long id;
+    Long id;
 
     @Size(min = 3, message = "USERNAME_INVALID")
-    private String username;
+     String username;
 
     @Size(min = 8, message = "PASSWORD_INVALID")
-    private String password;
+     String password;
 
-    private String lastName;
-    private String firstName;
-    private String email;
-    private LocalDate dob;
+     String lastName;
+     String firstName;
+     String email;
+     LocalDate dob;
 }

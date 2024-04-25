@@ -2,6 +2,7 @@ package com.quangta.service;
 
 import com.quangta.dto.request.UserCreationRequest;
 import com.quangta.dto.request.UserUpdateRequest;
+import com.quangta.dto.response.UserResponse;
 import com.quangta.entity.User;
 
 import java.util.List;
@@ -11,9 +12,9 @@ public interface UserService {
 
     List<User> getAllUsers();
 
-    User getUserById(String userId);
+    UserResponse getUserById(String userId);
 
-    User updateUser(String userId, UserUpdateRequest request);
+    UserResponse updateUser(String userId, UserUpdateRequest request);
 
     void deleteUser(String userId);
 }
