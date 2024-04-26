@@ -34,7 +34,7 @@ public class GlobalExceptionHandler {
     ResponseEntity<ApiResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         String enumKey = e.getFieldError().getDefaultMessage();
 
-        ErrorCode errorCode = ErrorCode.INVALID_KEY;
+        ErrorCode errorCode = ErrorCode.INVALID_MESSAGE_KEY;
 
         try {
             errorCode = ErrorCode.valueOf(enumKey);
