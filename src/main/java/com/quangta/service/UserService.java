@@ -3,14 +3,13 @@ package com.quangta.service;
 import com.quangta.dto.request.UserCreationRequest;
 import com.quangta.dto.request.UserUpdateRequest;
 import com.quangta.dto.response.UserResponse;
-import com.quangta.entity.User;
 
 import java.util.List;
 
 public interface UserService {
-    User createUser(UserCreationRequest request);
+    UserResponse createUser(UserCreationRequest request);
 
-    List<User> getAllUsers();
+    List<UserResponse> getAllUsers();
 
     UserResponse getUserById(String userId);
 
