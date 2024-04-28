@@ -13,12 +13,17 @@ import com.quangta.service.UserService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -49,14 +54,28 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserResponse getProfile() {
+        var contextHolder = SecurityContextHolder.getContext();
+        String name = contextHolder.getAuthentication().getName();
+
+        User user = userRepository.findByUsername(name).orElseThrow(
+                () -> new AppException(ErrorCode.USER_NOT_EXISTED)
+        );
+
+        return userMapper.mapToUserResponse(user);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')") // verify before getAllUsers() is called
+    @Override
     public List<UserResponse> getAllUsers() {
         return userRepository.findAll().stream().map(userMapper::mapToUserResponse).toList();
     }
 
+    @PostAuthorize("returnObject.username == authentication.name") // verify after getUserById() is called
     @Override
     public UserResponse getUserById(String userId) {
         return userMapper.mapToUserResponse(
-                userRepository.findById(userId).orElseThrow(RuntimeException::new)
+                userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED))
         );
     }
 

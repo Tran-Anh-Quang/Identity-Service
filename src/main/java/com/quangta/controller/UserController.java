@@ -50,16 +50,30 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public UserResponse getUserById(@PathVariable String userId){
-        return userService.getUserById(userId);
+    public ApiResponse<UserResponse> getUserById(@PathVariable String userId){
+        return ApiResponse.<UserResponse>builder()
+                .message("Success")
+                .result(userService.getUserById(userId))
+                .build();
+    }
+
+    @GetMapping("/profile")
+    public ApiResponse<UserResponse> getProfile(){
+        return ApiResponse.<UserResponse>builder()
+                .message("Success")
+                .result(userService.getProfile())
+                .build();
     }
 
     @PutMapping("/update/{userId}")
-    public UserResponse updateUser(
+    public ApiResponse<UserResponse> updateUser(
             @PathVariable String userId,
             @RequestBody UserUpdateRequest request
     ){
-        return userService.updateUser(userId,request);
+        return ApiResponse.<UserResponse>builder()
+                .message("Update Success")
+                .result(userService.updateUser(userId, request))
+                .build();
     }
 
     @DeleteMapping("/delete/{userId}")
