@@ -48,6 +48,7 @@ public class SecurityConfig {
                                .decoder(jwtDecoder()) //decoder is an interface, so need an implement for this
                                .jwtAuthenticationConverter(jwtAuthenticationConverter())
                        )
+                       .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
                );
         return http.build();
     }
