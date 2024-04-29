@@ -25,6 +25,6 @@ public class User {
     String email;
     LocalDate dob;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    Set<String> roles;
+    @ManyToMany
+    Set<Role> roles;
 }
