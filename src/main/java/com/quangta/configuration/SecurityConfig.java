@@ -25,9 +25,9 @@ import javax.crypto.spec.SecretKeySpec;
 public class SecurityConfig {
 
     private final String [] PUBLIC_ENDPOINT = {
-            "/api/v1/users/create",
-            "/api/v1/auth/token",
-            "/api/v1/auth/introspect",
+            "/api/v1/users/register",
+            "/api/v1/auth/login",
+            "/api/v1/auth/verify-token",
     };
 
     @Value("${jwt.signerKey}")
@@ -56,7 +56,7 @@ public class SecurityConfig {
     @Bean
     JwtAuthenticationConverter jwtAuthenticationConverter(){
         JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-        jwtGrantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
+        jwtGrantedAuthoritiesConverter.setAuthorityPrefix("");
 
         JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);

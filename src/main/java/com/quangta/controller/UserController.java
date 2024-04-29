@@ -26,7 +26,7 @@ public class UserController {
 
     UserService userService;
 
-    @PostMapping("/create")
+    @PostMapping("/register")
     public ApiResponse<UserResponse> createUser(@RequestBody @Valid  UserCreationRequest request){
 
         return ApiResponse.<UserResponse>builder()

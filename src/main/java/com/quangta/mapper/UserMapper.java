@@ -12,8 +12,8 @@ import org.mapstruct.MappingTarget;
 public interface UserMapper {
     User createUser(UserCreationRequest request);
 
-//    @Mapping(target = "password", ignore = true) // custom response field
     UserResponse mapToUserResponse(User user);
 
+    @Mapping(target = "roles", ignore = true)
     void updateUser(@MappingTarget User user, UserUpdateRequest request);
 }

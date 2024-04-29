@@ -8,6 +8,7 @@ import com.quangta.enums.Role;
 import com.quangta.exception.AppException;
 import com.quangta.exception.ErrorCode;
 import com.quangta.mapper.UserMapper;
+import com.quangta.repository.RoleRepository;
 import com.quangta.repository.UserRepository;
 import com.quangta.service.UserService;
 import lombok.AccessLevel;
@@ -30,6 +31,8 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     UserRepository userRepository;
+
+    RoleRepository roleRepository;
 
     UserMapper userMapper;
 
@@ -65,7 +68,9 @@ public class UserServiceImpl implements UserService {
         return userMapper.mapToUserResponse(user);
     }
 
-    @PreAuthorize("hasRole('ADMIN')") // verify before getAllUsers() is called
+//    @PreAuthorize("hasRole('ADMIN')") // verify that the user is ADMIN before getAllUsers() is called
+    @PreAuthorize("hasAuthority('APPROVE_POST')") // verify that the user has permission
+                                                // APPROVE_POST before getAllUsers() is called
     @Override
     public List<UserResponse> getAllUsers() {
         return userRepository.findAll().stream().map(userMapper::mapToUserResponse).toList();
@@ -84,6 +89,10 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(userId).orElseThrow(RuntimeException::new);
 
         userMapper.updateUser(user, request);
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+
+        var roles = roleRepository.findAllById(request.getRoles());
+        user.setRoles(new HashSet<>(roles));
 
         return userMapper.mapToUserResponse(userRepository.save(user));
     }
