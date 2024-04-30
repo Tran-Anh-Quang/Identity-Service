@@ -1,5 +1,6 @@
 package com.quangta.dto.request;
 
+import com.quangta.validator.DobConstraint;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -23,5 +24,7 @@ public class UserCreationRequest {
      String lastName;
      String firstName;
      String email;
+
+     @DobConstraint(min = 14, message = "INVALID_DOB")
      LocalDate dob;
 }
