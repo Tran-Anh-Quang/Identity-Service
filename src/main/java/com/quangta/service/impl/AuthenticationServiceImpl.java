@@ -7,11 +7,14 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import com.quangta.dto.request.AuthenticationRequest;
 import com.quangta.dto.request.IntrospectRequest;
+import com.quangta.dto.request.LogoutRequest;
 import com.quangta.dto.response.AuthenticationResponse;
 import com.quangta.dto.response.IntrospectResponse;
+import com.quangta.entity.InvalidToken;
 import com.quangta.entity.User;
 import com.quangta.exception.AppException;
 import com.quangta.exception.ErrorCode;
+import com.quangta.repository.InvalidTokenRepository;
 import com.quangta.repository.UserRepository;
 import com.quangta.service.AuthenticationService;
 import lombok.AccessLevel;
@@ -30,6 +33,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.StringJoiner;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -38,6 +42,8 @@ import java.util.StringJoiner;
 public class AuthenticationServiceImpl implements AuthenticationService {
 
     UserRepository userRepository;
+
+    InvalidTokenRepository invalidTokenRepository;
 
     @NonFinal
     @Value("${jwt.signerKey}")
@@ -73,6 +79,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .expirationTime(new Date(
                         Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli()
                 ))
+                .jwtID(UUID.randomUUID().toString())
                 .claim("scope", buildScope(user))
                 .build();
 
@@ -107,19 +114,44 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
+    public void logout(LogoutRequest request) throws ParseException, JOSEException {
+        var signToken = verifyToken(request.getToken());
+
+        String jit = signToken.getJWTClaimsSet().getJWTID();
+        Date expireTime = signToken.getJWTClaimsSet().getExpirationTime();
+
+        InvalidToken invalidToken = InvalidToken.builder()
+                .id(jit)
+                .expireTime(expireTime)
+                .build();
+
+        invalidTokenRepository.save(invalidToken);
+    }
+
+    private SignedJWT verifyToken(String token) throws JOSEException, ParseException {
+        JWSVerifier verifier = new MACVerifier(SIGNER_KEY.getBytes());
+
+        SignedJWT signedJWT = SignedJWT.parse(token);
+
+        Date expireTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+
+        var verified = signedJWT.verify(verifier);
+
+        if (!(verified && expireTime.after(new Date()))){
+            throw new AppException(ErrorCode.UNAUTHENTICATED);
+        }
+
+        return signedJWT;
+    }
+
+    @Override
     public IntrospectResponse introspect(IntrospectRequest request) throws JOSEException, ParseException {
             var token = request.getToken();
 
-            JWSVerifier verifier = new MACVerifier(SIGNER_KEY.getBytes());
-
-            SignedJWT signedJWT = SignedJWT.parse(token);
-
-            Date expireTime = signedJWT.getJWTClaimsSet().getExpirationTime();
-
-            var verified = signedJWT.verify(verifier);
+            verifyToken(token);
 
             return IntrospectResponse.builder()
-                    .valid(verified && expireTime.after(new Date()))
+                    .valid(true)
                     .build();
     }
 }

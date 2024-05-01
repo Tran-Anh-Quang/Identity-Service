@@ -3,6 +3,7 @@ package com.quangta.controller;
 import com.nimbusds.jose.JOSEException;
 import com.quangta.dto.request.AuthenticationRequest;
 import com.quangta.dto.request.IntrospectRequest;
+import com.quangta.dto.request.LogoutRequest;
 import com.quangta.dto.response.ApiResponse;
 import com.quangta.dto.response.AuthenticationResponse;
 import com.quangta.dto.response.IntrospectResponse;
@@ -41,6 +42,15 @@ public class AuthenticationController {
 
         return ApiResponse.<IntrospectResponse>builder()
                 .result(result)
+                .build();
+    }
+
+    @PostMapping("/logout")
+    public ApiResponse<Void> logout(@RequestBody LogoutRequest request)
+            throws ParseException, JOSEException {
+        authenticationService.logout(request);
+
+        return ApiResponse.<Void>builder()
                 .build();
     }
 }
