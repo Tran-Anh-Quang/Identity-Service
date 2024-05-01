@@ -141,17 +141,26 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             throw new AppException(ErrorCode.UNAUTHENTICATED);
         }
 
+        if (invalidTokenRepository.existsById(signedJWT.getJWTClaimsSet().getJWTID())){
+            throw new AppException(ErrorCode.UNAUTHENTICATED);
+        }
+
         return signedJWT;
     }
 
     @Override
     public IntrospectResponse introspect(IntrospectRequest request) throws JOSEException, ParseException {
-            var token = request.getToken();
+        var token = request.getToken();
+        boolean isValid = true;
 
+        try {
             verifyToken(token);
-
-            return IntrospectResponse.builder()
-                    .valid(true)
-                    .build();
+        } catch (AppException e) {
+            isValid = false;
+        }
+        return IntrospectResponse.builder()
+                .valid(isValid)
+                .build();
     }
 }
+
