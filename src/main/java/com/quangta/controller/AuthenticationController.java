@@ -4,6 +4,7 @@ import com.nimbusds.jose.JOSEException;
 import com.quangta.dto.request.AuthenticationRequest;
 import com.quangta.dto.request.IntrospectRequest;
 import com.quangta.dto.request.LogoutRequest;
+import com.quangta.dto.request.RefreshTokenRequest;
 import com.quangta.dto.response.ApiResponse;
 import com.quangta.dto.response.AuthenticationResponse;
 import com.quangta.dto.response.IntrospectResponse;
@@ -35,12 +36,23 @@ public class AuthenticationController {
                 .build();
     }
 
+
     @PostMapping("/verify-token")
     public ApiResponse<IntrospectResponse> introspect(@RequestBody IntrospectRequest request)
             throws ParseException, JOSEException {
         var result = authenticationService.introspect(request);
 
         return ApiResponse.<IntrospectResponse>builder()
+                .result(result)
+                .build();
+    }
+
+    @PostMapping("/refresh-token")
+    public ApiResponse<AuthenticationResponse> refreshToken(@RequestBody RefreshTokenRequest request)
+            throws ParseException, JOSEException {
+        var result = authenticationService.refreshToken(request);
+
+        return ApiResponse.<AuthenticationResponse>builder()
                 .result(result)
                 .build();
     }
