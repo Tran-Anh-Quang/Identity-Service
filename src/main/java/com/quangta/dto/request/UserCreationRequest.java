@@ -16,14 +16,14 @@ public class UserCreationRequest {
     Long id;
 
     @Size(min = 4, message = "USERNAME_INVALID")
-     String username;
+    String username;
 
     @Size(min = 8, message = "PASSWORD_INVALID")
-     String password;
+    String password;
 
-     String lastName;
-     String firstName;
-     String email;
+    String lastName;
+    String firstName;
+    String email;
 
      @DobConstraint(min = 14, message = "INVALID_DOB")
      LocalDate dob;

@@ -31,7 +31,7 @@ public class UserControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
+    @MockBean // mock to user service
     private UserService userService;
 
     private UserCreationRequest request;
@@ -93,7 +93,7 @@ public class UserControllerTest {
         objectMapper.registerModule(new JavaTimeModule());
         String content = objectMapper.writeValueAsString(request);
 
-//        when(userService.createUser(any())).thenReturn(response);    // Because method return response of @Valid
+//        when(userService.createUser(any())).thenReturn(response);    // Because method return response of @Size of Validation library
                                                                        // So don't need to mock to the Service
 
         //WHEN, THEN
