@@ -62,7 +62,7 @@ public class UserControllerTest {
 
     @Test
     void createUser_validRequest_success() throws Exception {
-        //GIVEN
+        //GIVEN (valid request)
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         String content = objectMapper.writeValueAsString(request);
@@ -83,5 +83,26 @@ public class UserControllerTest {
                 .andExpect(jsonPath("result.lastName").value("tran"))
                 .andExpect(jsonPath("result.email").value("test02@gmail.com"))
                 .andExpect(jsonPath("result.dob").value("2000-01-01"));
+    }
+
+    @Test
+    void createUser_usernameInValidRequest_success() throws Exception {
+        //GIVEN (invalid request)
+        request.setUsername("tes");
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        String content = objectMapper.writeValueAsString(request);
+
+//        when(userService.createUser(any())).thenReturn(response);    // Because method return response of @Valid
+                                                                       // So don't need to mock to the Service
+
+        //WHEN, THEN
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/api/v1/users/register")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(content))
+                .andExpect(status().isBadRequest()) // status of API response
+                .andExpect(jsonPath("code").value(1003)) // code of API response
+                .andExpect(jsonPath("message").value("Username must be at least 4 characters!")); // message of API response
     }
 }
