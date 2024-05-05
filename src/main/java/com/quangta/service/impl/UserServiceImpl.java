@@ -1,5 +1,8 @@
 package com.quangta.service.impl;
 
+import java.util.HashSet;
+import java.util.List;
+
 import com.quangta.dto.request.UserCreationRequest;
 import com.quangta.dto.request.UserUpdateRequest;
 import com.quangta.dto.response.UserResponse;
@@ -21,9 +24,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.List;
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponse createUser(UserCreationRequest request) {
-        if(userRepository.existsByUsername(request.getUsername())) {
+        if (userRepository.existsByUsername(request.getUsername())) {
             throw new AppException(ErrorCode.USER_EXISTED);
         }
 
@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
         HashSet<String> roles = new HashSet<>();
         roles.add(Role.USER.name());
 
-//        user.setRoles(roles);
+        //        user.setRoles(roles);
 
         return userMapper.mapToUserResponse(userRepository.save(user));
     }
@@ -61,27 +61,26 @@ public class UserServiceImpl implements UserService {
         var contextHolder = SecurityContextHolder.getContext();
         String name = contextHolder.getAuthentication().getName();
 
-        User user = userRepository.findByUsername(name).orElseThrow(
-                () -> new AppException(ErrorCode.USER_NOT_EXISTED)
-        );
+        User user = userRepository.findByUsername(name).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         return userMapper.mapToUserResponse(user);
     }
 
-//    @PreAuthorize("hasRole('ADMIN')") // verify that the user is ADMIN before getAllUsers() is called
+    //    @PreAuthorize("hasRole('ADMIN')") // verify that the user is ADMIN before getAllUsers() is called
     @PreAuthorize("hasAuthority('APPROVE_POST')") // verify that the user has permission
-                                                // APPROVE_POST before getAllUsers() is called
+    // APPROVE_POST before getAllUsers() is called
     @Override
     public List<UserResponse> getAllUsers() {
-        return userRepository.findAll().stream().map(userMapper::mapToUserResponse).toList();
+        return userRepository.findAll().stream()
+                .map(userMapper::mapToUserResponse)
+                .toList();
     }
 
     @PostAuthorize("returnObject.username == authentication.name") // verify after getUserById() is called
     @Override
     public UserResponse getUserById(String userId) {
         return userMapper.mapToUserResponse(
-                userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED))
-        );
+                userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED)));
     }
 
     @Override

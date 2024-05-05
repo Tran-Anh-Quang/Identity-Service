@@ -68,6 +68,11 @@
             <version>2.1.214</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.diffplug.spotless</groupId>
+            <artifactId>spotless-maven-plugin</artifactId>
+            <version>2.43.0</version>
+        </dependency>
 
         <dependency>
             <groupId>org.postgresql</groupId>
@@ -94,6 +99,62 @@
                         </exclude>
                     </excludes>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.12</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <excludes>
+                        <exclude>com/quangta/dto/**</exclude>
+                        <exclude>com/quangta/entity/**</exclude>
+                        <exclude>com/quangta/mapper/**</exclude>
+                        <exclude>com/quangta/configuration/**</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.diffplug.spotless</groupId>
+                <artifactId>spotless-maven-plugin</artifactId>
+                <version>2.43.0</version>
+                <configuration>
+                    <java>
+                        <removeUnusedImports />
+                        <toggleOffOn />
+                        <trimTrailingWhitespace />
+                        <endWithNewline />
+                        <indent>
+                            <tabs>true</tabs>
+                            <spacesPerTab>4</spacesPerTab>
+                        </indent>
+                        <palantirJavaFormat />
+                        <importOrder>
+                            <order>java, jakarta, org, com, com.diffplug</order>
+                        </importOrder>
+                    </java>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>apply</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

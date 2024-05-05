@@ -1,5 +1,8 @@
 package com.quangta.service.impl;
 
+import java.util.HashSet;
+import java.util.List;
+
 import com.quangta.dto.request.RoleRequest;
 import com.quangta.dto.response.RoleResponse;
 import com.quangta.mapper.RoleMapper;
@@ -11,9 +14,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.util.HashSet;
-import java.util.List;
 
 @Slf4j
 @Service
@@ -40,10 +40,6 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public List<RoleResponse> getAllRoles() {
-        return roleRepository.findAll()
-                .stream()
-                .map(roleMapper::toRoleResponse)
-                .toList();
+        return roleRepository.findAll().stream().map(roleMapper::toRoleResponse).toList();
     }
-
 }

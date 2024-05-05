@@ -1,10 +1,17 @@
 package com.quangta.service;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
+
+import java.time.LocalDate;
+import java.util.Optional;
+
 import com.quangta.dto.request.UserCreationRequest;
 import com.quangta.dto.response.UserResponse;
 import com.quangta.entity.User;
 import com.quangta.exception.AppException;
-import com.quangta.exception.ErrorCode;
 import com.quangta.repository.UserRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,15 +19,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.TestPropertySource;
-
-import java.time.LocalDate;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
-
 
 @SpringBootTest
 @TestPropertySource("/test.properties")
@@ -37,7 +37,7 @@ public class UserServiceTest {
     private User user;
 
     @BeforeEach
-    public void initData(){
+    public void initData() {
         LocalDate dob = LocalDate.of(2000, 1, 1);
 
         request = UserCreationRequest.builder()
@@ -69,31 +69,59 @@ public class UserServiceTest {
     }
 
     @Test
-    public void createUser_validRequest_success(){
-        //GIVEN
+    public void createUser_validRequest_success() {
+        // GIVEN
         when(userRepository.existsByUsername(anyString())).thenReturn(false);
         when(userRepository.save(any())).thenReturn(user);
 
-        //WHEN
+        // WHEN
         var response = userService.createUser(request);
 
-        //THEN
+        // THEN
         Assertions.assertThat(response.getId()).isEqualTo("42e2-bae5-9ea7c0f1c4d4");
         Assertions.assertThat(response.getUsername()).isEqualTo("test02");
     }
 
     @Test
-    public void createUser_userExisted_fail(){
-        //GIVEN
+    public void createUser_invalidRequest_fail() {
+        // GIVEN
         when(userRepository.existsByUsername(anyString())).thenReturn(true);
 
-        //WHEN
-        var exception = assertThrows(
-                AppException.class,
-                () -> userService.createUser(request)
-        );
+        // WHEN
+        var exception = assertThrows(AppException.class, () -> userService.createUser(request));
 
-        //THEN
+        // THEN
         Assertions.assertThat(exception.getErrorCode().getCode()).isEqualTo(1001);
+    }
+
+    @Test
+    @WithMockUser(
+            username = "test02",
+            roles = {"USER"})
+    public void getProfile_validRequest_success() {
+        // GIVEN
+        when(userRepository.findByUsername(anyString())).thenReturn(Optional.of(user));
+
+        // WHEN
+        var response = userService.getProfile();
+
+        // THEN
+        Assertions.assertThat(response.getUsername()).isEqualTo("test02");
+        Assertions.assertThat(response.getId()).isEqualTo("42e2-bae5-9ea7c0f1c4d4");
+    }
+
+    @Test
+    @WithMockUser(
+            username = "test02",
+            roles = {"USER"})
+    public void getProfile_invalidRequest_fail() {
+        // GIVEN
+        when(userRepository.findByUsername(anyString())).thenReturn(Optional.ofNullable(null));
+
+        // WHEN
+        var exception = assertThrows(AppException.class, () -> userService.getProfile());
+
+        // THEN
+        Assertions.assertThat(exception.getErrorCode().getCode()).isEqualTo(1005);
     }
 }

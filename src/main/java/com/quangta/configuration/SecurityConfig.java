@@ -14,45 +14,38 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 
-
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final String [] PUBLIC_ENDPOINT = {
-            "/api/v1/users/register",
-            "/api/v1/auth/login",
-            "/api/v1/auth/verify-token",
-            "/api/v1/auth/refresh-token",
-            "/api/v1/auth/logout",
+    private final String[] PUBLIC_ENDPOINT = {
+        "/api/v1/users/register",
+        "/api/v1/auth/login",
+        "/api/v1/auth/verify-token",
+        "/api/v1/auth/refresh-token",
+        "/api/v1/auth/logout",
     };
 
     private final CustomJwtDecoder customJwtDecoder;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-       http
-               .authorizeHttpRequests(request -> request
-                       .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINT)
-                       .permitAll()
-                       .anyRequest()
-                       .authenticated()
-               )
-               .csrf(AbstractHttpConfigurer::disable)
-               .oauth2ResourceServer(oauth2 -> oauth2
-                       .jwt(jwtConfigurer -> jwtConfigurer
-                               .decoder(customJwtDecoder) //decoder is an interface, so need an implement for this
-                               .jwtAuthenticationConverter(jwtAuthenticationConverter())
-                       )
-                       .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
-               );
+        http.authorizeHttpRequests(request -> request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINT)
+                        .permitAll()
+                        .anyRequest()
+                        .authenticated())
+                .csrf(AbstractHttpConfigurer::disable)
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer -> jwtConfigurer
+                                .decoder(customJwtDecoder) // decoder is an interface, so need an implement for this
+                                .jwtAuthenticationConverter(jwtAuthenticationConverter()))
+                        .authenticationEntryPoint(new JwtAuthenticationEntryPoint()));
         return http.build();
     }
 
     @Bean
-    JwtAuthenticationConverter jwtAuthenticationConverter(){
+    JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
         jwtGrantedAuthoritiesConverter.setAuthorityPrefix("");
 
@@ -63,7 +56,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    PasswordEncoder passwordEncoder(){
+    PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(10);
     }
 }

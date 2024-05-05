@@ -6,6 +6,6 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AppException extends RuntimeException{
+public class AppException extends RuntimeException {
     private ErrorCode errorCode;
 }

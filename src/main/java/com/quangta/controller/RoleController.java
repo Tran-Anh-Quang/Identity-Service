@@ -1,5 +1,7 @@
 package com.quangta.controller;
 
+import java.util.List;
+
 import com.quangta.dto.request.RoleRequest;
 import com.quangta.dto.response.ApiResponse;
 import com.quangta.dto.response.RoleResponse;
@@ -9,9 +11,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-
 
 @Slf4j
 @RestController

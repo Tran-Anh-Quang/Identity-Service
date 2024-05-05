@@ -1,5 +1,9 @@
 package com.quangta.configuration;
 
+import java.text.ParseException;
+import java.util.Objects;
+import javax.crypto.spec.SecretKeySpec;
+
 import com.nimbusds.jose.JOSEException;
 import com.quangta.dto.request.IntrospectRequest;
 import com.quangta.service.AuthenticationService;
@@ -11,10 +15,6 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.stereotype.Component;
-
-import javax.crypto.spec.SecretKeySpec;
-import java.text.ParseException;
-import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
@@ -30,19 +30,19 @@ public class CustomJwtDecoder implements JwtDecoder {
     @Override
     public Jwt decode(String token) throws JwtException {
         try {
-            var response = authenticationService.introspect(IntrospectRequest.builder().token(token).build());
+            var response = authenticationService.introspect(
+                    IntrospectRequest.builder().token(token).build());
 
-            if (!response.isValid()){
+            if (!response.isValid()) {
                 throw new JwtException("Invalid token");
             }
-        }catch (JOSEException | ParseException e){
+        } catch (JOSEException | ParseException e) {
             throw new JwtException(e.getMessage());
         }
 
         if (Objects.isNull(nimbusJwtDecoder)) {
             SecretKeySpec secretKeySpec = new SecretKeySpec(signerKey.getBytes(), "HS512");
-            nimbusJwtDecoder = NimbusJwtDecoder
-                    .withSecretKey(secretKeySpec)
+            nimbusJwtDecoder = NimbusJwtDecoder.withSecretKey(secretKeySpec)
                     .macAlgorithm(MacAlgorithm.HS512)
                     .build();
         }

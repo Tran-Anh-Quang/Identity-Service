@@ -1,5 +1,7 @@
 package com.quangta.controller;
 
+import java.util.List;
+
 import com.quangta.dto.request.UserCreationRequest;
 import com.quangta.dto.request.UserUpdateRequest;
 import com.quangta.dto.response.ApiResponse;
@@ -15,8 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -27,7 +27,7 @@ public class UserController {
     UserService userService;
 
     @PostMapping("/register")
-    public ApiResponse<UserResponse> createUser(@RequestBody @Valid  UserCreationRequest request){
+    public ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreationRequest request) {
 
         return ApiResponse.<UserResponse>builder()
                 .message("Create Success")
@@ -36,13 +36,11 @@ public class UserController {
     }
 
     @GetMapping
-    public ApiResponse<List<UserResponse>> getAllUsers(){
+    public ApiResponse<List<UserResponse>> getAllUsers() {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
 
         log.info("Username: {}", authentication.getName());
-        authentication.getAuthorities().forEach(grantedAuthority ->
-                log.info(grantedAuthority.getAuthority())
-        );
+        authentication.getAuthorities().forEach(grantedAuthority -> log.info(grantedAuthority.getAuthority()));
 
         return ApiResponse.<List<UserResponse>>builder()
                 .result(userService.getAllUsers())
@@ -50,7 +48,7 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public ApiResponse<UserResponse> getUserById(@PathVariable String userId){
+    public ApiResponse<UserResponse> getUserById(@PathVariable String userId) {
         return ApiResponse.<UserResponse>builder()
                 .message("Success")
                 .result(userService.getUserById(userId))
@@ -58,7 +56,7 @@ public class UserController {
     }
 
     @GetMapping("/profile")
-    public ApiResponse<UserResponse> getProfile(){
+    public ApiResponse<UserResponse> getProfile() {
         return ApiResponse.<UserResponse>builder()
                 .message("Success")
                 .result(userService.getProfile())
@@ -66,10 +64,7 @@ public class UserController {
     }
 
     @PutMapping("/update/{userId}")
-    public ApiResponse<UserResponse> updateUser(
-            @PathVariable String userId,
-            @RequestBody UserUpdateRequest request
-    ){
+    public ApiResponse<UserResponse> updateUser(@PathVariable String userId, @RequestBody UserUpdateRequest request) {
         return ApiResponse.<UserResponse>builder()
                 .message("Update Success")
                 .result(userService.updateUser(userId, request))
@@ -77,7 +72,7 @@ public class UserController {
     }
 
     @DeleteMapping("/delete/{userId}")
-    public ResponseEntity<String> deleteUser(@PathVariable String userId){
+    public ResponseEntity<String> deleteUser(@PathVariable String userId) {
         userService.deleteUser(userId);
         return new ResponseEntity<>("Delete Success", null, HttpStatus.OK);
     }

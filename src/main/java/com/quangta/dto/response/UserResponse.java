@@ -1,11 +1,11 @@
 package com.quangta.dto.response;
 
+import java.time.LocalDate;
+import java.util.Set;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.time.LocalDate;
-import java.util.Set;
 
 @Data
 @Builder
@@ -14,11 +14,11 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserResponse {
-     String id;
-     String username;
-     String lastName;
-     String firstName;
-     String email;
-     LocalDate dob;
-     Set<RoleResponse> roles;
+    String id;
+    String username;
+    String lastName;
+    String firstName;
+    String email;
+    LocalDate dob;
+    Set<RoleResponse> roles;
 }

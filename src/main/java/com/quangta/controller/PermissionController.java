@@ -1,5 +1,7 @@
 package com.quangta.controller;
 
+import java.util.List;
+
 import com.quangta.dto.request.PermissionRequest;
 import com.quangta.dto.response.ApiResponse;
 import com.quangta.dto.response.PermissionResponse;
@@ -9,8 +11,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -38,8 +38,6 @@ public class PermissionController {
     @DeleteMapping("/{permissionId}")
     public ApiResponse<Void> deletePermission(@PathVariable String permissionId) {
         permissionService.deletePermission(permissionId);
-        return ApiResponse.<Void>builder()
-                .message("Delete Success")
-                .build();
+        return ApiResponse.<Void>builder().message("Delete Success").build();
     }
 }

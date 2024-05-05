@@ -1,5 +1,7 @@
 package com.quangta.configuration;
 
+import java.util.HashSet;
+
 import com.quangta.entity.User;
 import com.quangta.enums.Role;
 import com.quangta.repository.UserRepository;
@@ -11,7 +13,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.HashSet;
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
@@ -23,8 +24,7 @@ public class ApplicationConfig {
     @ConditionalOnProperty(
             prefix = "spring",
             value = "datasource.driverClassName",
-            havingValue = "org.postgresql.Driver"
-    )
+            havingValue = "org.postgresql.Driver")
     ApplicationRunner applicationRunner(UserRepository userRepository) {
         return args -> {
             if (userRepository.findByUsername("admin").isEmpty()) {
@@ -34,7 +34,7 @@ public class ApplicationConfig {
                 User user = User.builder()
                         .username("admin")
                         .password(passwordEncoder.encode("admin"))
-//                        .roles(roles)
+                        //                        .roles(roles)
                         .build();
 
                 userRepository.save(user);

@@ -1,5 +1,7 @@
 package com.quangta.service.impl;
 
+import java.util.List;
+
 import com.quangta.dto.request.PermissionRequest;
 import com.quangta.dto.response.PermissionResponse;
 import com.quangta.entity.Permission;
@@ -11,8 +13,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Slf4j
 @Service
@@ -34,8 +34,7 @@ public class PermissionServiceImpl implements PermissionService {
 
     @Override
     public List<PermissionResponse> getAllPermissions() {
-        return permissionRepository.findAll()
-                .stream()
+        return permissionRepository.findAll().stream()
                 .map(permissionMapper::toPermissionResponse)
                 .toList();
     }

@@ -1,9 +1,9 @@
 package com.quangta.service;
 
+import java.util.List;
+
 import com.quangta.dto.request.PermissionRequest;
 import com.quangta.dto.response.PermissionResponse;
-
-import java.util.List;
 
 public interface PermissionService {
 

@@ -1,10 +1,10 @@
 package com.quangta.service;
 
+import java.util.List;
+
 import com.quangta.dto.request.UserCreationRequest;
 import com.quangta.dto.request.UserUpdateRequest;
 import com.quangta.dto.response.UserResponse;
-
-import java.util.List;
 
 public interface UserService {
     UserResponse createUser(UserCreationRequest request);
