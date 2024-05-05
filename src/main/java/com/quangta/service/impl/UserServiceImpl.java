@@ -3,11 +3,12 @@ package com.quangta.service.impl;
 import java.util.HashSet;
 import java.util.List;
 
+import com.quangta.constant.PredefinedRole;
 import com.quangta.dto.request.UserCreationRequest;
 import com.quangta.dto.request.UserUpdateRequest;
 import com.quangta.dto.response.UserResponse;
+import com.quangta.entity.Role;
 import com.quangta.entity.User;
-import com.quangta.enums.Role;
 import com.quangta.exception.AppException;
 import com.quangta.exception.ErrorCode;
 import com.quangta.mapper.UserMapper;
@@ -48,10 +49,10 @@ public class UserServiceImpl implements UserService {
 
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
-        HashSet<String> roles = new HashSet<>();
-        roles.add(Role.USER.name());
+        HashSet<Role> roles = new HashSet<>();
+        roleRepository.findById(PredefinedRole.USER_ROLE).ifPresent(roles::add);
 
-        //        user.setRoles(roles);
+        user.setRoles(roles);
 
         return userMapper.mapToUserResponse(userRepository.save(user));
     }
@@ -66,9 +67,9 @@ public class UserServiceImpl implements UserService {
         return userMapper.mapToUserResponse(user);
     }
 
-    //    @PreAuthorize("hasRole('ADMIN')") // verify that the user is ADMIN before getAllUsers() is called
-    @PreAuthorize("hasAuthority('APPROVE_POST')") // verify that the user has permission
+    //    @PreAuthorize("hasAuthority('APPROVE_POST')") // verify that the user has permission
     // APPROVE_POST before getAllUsers() is called
+    @PreAuthorize("hasRole('ADMIN')") // verify that the user is ADMIN before getAllUsers() is called
     @Override
     public List<UserResponse> getAllUsers() {
         return userRepository.findAll().stream()

@@ -2,10 +2,13 @@ package com.quangta.configuration;
 
 import java.util.HashSet;
 
+import com.quangta.constant.PredefinedRole;
+import com.quangta.entity.Role;
 import com.quangta.entity.User;
-import com.quangta.enums.Role;
+import com.quangta.repository.RoleRepository;
 import com.quangta.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -20,26 +23,46 @@ public class ApplicationConfig {
 
     private final PasswordEncoder passwordEncoder;
 
+    @NonFinal
+    static final String ADMIN_USER_NAME = "admin";
+
+    @NonFinal
+    static final String ADMIN_PASSWORD = "admin";
+
     @Bean
     @ConditionalOnProperty(
             prefix = "spring",
             value = "datasource.driverClassName",
             havingValue = "org.postgresql.Driver")
-    ApplicationRunner applicationRunner(UserRepository userRepository) {
+    ApplicationRunner applicationRunner(UserRepository userRepository, RoleRepository roleRepository) {
         return args -> {
-            if (userRepository.findByUsername("admin").isEmpty()) {
-                var roles = new HashSet<String>();
-                roles.add(Role.ADMIN.name());
+            if (userRepository.findByUsername(ADMIN_USER_NAME).isEmpty()) {
+                // initialize user role
+                roleRepository.save(Role.builder()
+                        .name(PredefinedRole.USER_ROLE)
+                        .description("User role")
+                        .build());
+
+                // initialize admin role
+                Role adminRole = roleRepository.save(Role.builder()
+                        .name(PredefinedRole.ADMIN_ROLE)
+                        .description("Admin role")
+                        .build());
+
+                //  initialize admin user
+                var roles = new HashSet<Role>();
+                roles.add(adminRole);
 
                 User user = User.builder()
-                        .username("admin")
-                        .password(passwordEncoder.encode("admin"))
-                        //                        .roles(roles)
+                        .username(ADMIN_USER_NAME)
+                        .password(passwordEncoder.encode(ADMIN_PASSWORD))
+                        .roles(roles)
                         .build();
 
                 userRepository.save(user);
-                log.info("Admin created: {}", user);
+                log.warn("admin user has been created with default password: admin, please change it");
             }
+            log.info("Application initialization completed .....");
         };
     }
 }

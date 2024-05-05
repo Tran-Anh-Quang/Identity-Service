@@ -84,7 +84,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .subject(user.getUsername())
                 .issuer("dino.com")
                 .issueTime(new Date())
-                .expirationTime(new Date(Instant.now().plus(VALID_DURATION, ChronoUnit.SECONDS).toEpochMilli()))
+                .expirationTime(new Date(
+                        Instant.now().plus(VALID_DURATION, ChronoUnit.HOURS).toEpochMilli()))
                 .jwtID(UUID.randomUUID().toString())
                 .claim("scope", buildScope(user))
                 .build();
@@ -150,7 +151,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     InvalidToken.builder().id(jit).expireTime(expireTime).build();
 
             invalidTokenRepository.save(invalidToken);
-        }catch (AppException e) {
+        } catch (AppException e) {
             log.info("Token already expired");
         }
     }
@@ -161,8 +162,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         SignedJWT signedJWT = SignedJWT.parse(token);
 
         Date expireTime = (isRefresh)
-                ? new Date (signedJWT.getJWTClaimsSet().getIssueTime()
-                .toInstant().plus(REFRESH_DURATION, ChronoUnit.HOURS).toEpochMilli())
+                ? new Date(signedJWT
+                        .getJWTClaimsSet()
+                        .getIssueTime()
+                        .toInstant()
+                        .plus(REFRESH_DURATION, ChronoUnit.HOURS)
+                        .toEpochMilli())
                 : signedJWT.getJWTClaimsSet().getExpirationTime();
 
         var verified = signedJWT.verify(verifier);

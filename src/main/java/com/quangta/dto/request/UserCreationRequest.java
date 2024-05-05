@@ -25,6 +25,9 @@ public class UserCreationRequest {
     String firstName;
     String email;
 
+    @Size(min = 10, message = "PHONE_NUMBER_INVALID")
+    String phoneNumber;
+
     @DobConstraint(min = 14, message = "INVALID_DOB")
     LocalDate dob;
 }

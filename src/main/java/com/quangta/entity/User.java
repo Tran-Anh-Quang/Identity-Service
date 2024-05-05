@@ -24,6 +24,7 @@ public class User {
     String lastName;
     String firstName;
     String email;
+    String phoneNumber;
     LocalDate dob;
 
     @ManyToMany
