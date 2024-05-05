@@ -20,7 +20,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final String[] PUBLIC_ENDPOINT = {
+    private static final String[] PUBLIC_ENDPOINT = {
         "/api/v1/users/register",
         "/api/v1/auth/login",
         "/api/v1/auth/verify-token",
