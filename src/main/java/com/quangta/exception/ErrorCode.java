@@ -23,6 +23,8 @@ public enum ErrorCode {
     UNAUTHORIZED(1007, "Unauthorized!", HttpStatus.FORBIDDEN),
     INVALID_DOB(1008, "Your age must be at least {min}", HttpStatus.BAD_REQUEST),
     PHONE_NUMBER_INVALID(1009, "Your phone number must be {min} number", HttpStatus.BAD_REQUEST),
+    EMAIL_INVALID(1010, "Your email is invalid", HttpStatus.BAD_REQUEST),
+    EMAIL_EMPTY(1011, "Email can not be empty", HttpStatus.BAD_REQUEST),
     ;
     int code;
     String message;

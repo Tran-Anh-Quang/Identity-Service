@@ -3,6 +3,8 @@ package com.quangta.dto.request;
 import java.time.LocalDate;
 
 import com.quangta.validator.DobConstraint;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -23,6 +25,9 @@ public class UserCreationRequest {
 
     String lastName;
     String firstName;
+
+    @Email(message = "EMAIL_INVALID", regexp = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$")
+    @NotEmpty(message = "EMAIL_EMPTY")
     String email;
 
     @Size(min = 10, message = "PHONE_NUMBER_INVALID")
