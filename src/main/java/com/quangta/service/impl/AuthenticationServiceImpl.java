@@ -61,7 +61,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         var user = userRepository
-                .findByUsername(request.getUsername())
+                .findByPhoneNumber(request.getPhoneNumber())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
@@ -81,7 +81,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
 
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
-                .subject(user.getUsername())
+                .subject(user.getPhoneNumber())
                 .issuer("dino.com")
                 .issueTime(new Date())
                 .expirationTime(new Date(
@@ -115,10 +115,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         invalidTokenRepository.save(invalidToken);
 
-        var username = signedJwt.getJWTClaimsSet().getSubject();
+        var phoneNumber = signedJwt.getJWTClaimsSet().getSubject();
 
         var user =
-                userRepository.findByUsername(username).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+                userRepository.findByPhoneNumber(phoneNumber)
+                        .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         var token = generateToken(user);
 

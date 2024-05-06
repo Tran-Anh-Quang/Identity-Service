@@ -60,15 +60,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse getProfile() {
         var contextHolder = SecurityContextHolder.getContext();
-        String name = contextHolder.getAuthentication().getName();
+        String phoneNumber = contextHolder.getAuthentication().getName();
 
-        User user = userRepository.findByUsername(name).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        User user = userRepository.findByPhoneNumber(phoneNumber).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         return userMapper.mapToUserResponse(user);
     }
 
-    //    @PreAuthorize("hasAuthority('APPROVE_POST')") // verify that the user has permission
-    // APPROVE_POST before getAllUsers() is called
+    //    @PreAuthorize("hasAuthority('APPROVE_POST')")
+    // verify that the user has APPROVE_POST permission before getAllUsers() is called
     @PreAuthorize("hasRole('ADMIN')") // verify that the user is ADMIN before getAllUsers() is called
     @Override
     public List<UserResponse> getAllUsers() {
@@ -77,7 +77,7 @@ public class UserServiceImpl implements UserService {
                 .toList();
     }
 
-    @PostAuthorize("returnObject.username == authentication.name") // verify after getUserById() is called
+    @PostAuthorize("returnObject.username == authentication.name")
     @Override
     public UserResponse getUserById(String userId) {
         return userMapper.mapToUserResponse(
