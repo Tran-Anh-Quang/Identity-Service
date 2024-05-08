@@ -27,8 +27,7 @@ public enum ErrorCode {
     PASSWORD_INVALID_2(
             1011,
             "Password must contain at least 1 small letter, capital letter, number and special character",
-            HttpStatus.BAD_REQUEST
-    ),
+            HttpStatus.BAD_REQUEST),
     PHONE_NUMBER_EXISTED(1012, "Your phone number has already existed", HttpStatus.BAD_REQUEST),
     EMAIL_EXISTED(1013, "Your email has already existed", HttpStatus.BAD_REQUEST),
     LAST_NAME_INVALID(1014, "Last name must be at least {min} characters", HttpStatus.BAD_REQUEST),

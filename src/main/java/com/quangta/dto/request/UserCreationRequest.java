@@ -20,11 +20,16 @@ public class UserCreationRequest {
     @Size(min = 4, message = "USERNAME_INVALID")
     String username;
 
+    // the password must contain:
+    // at least 8 characters
+    // a lower case
+    // an upper case
+    // a special character
+    // a digit
     @Size(min = 8, message = "PASSWORD_INVALID_1")
     @Pattern(
             regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$",
-            message = "PASSWORD_INVALID_2"
-    )
+            message = "PASSWORD_INVALID_2")
     String password;
 
     @Size(min = 3, message = "LAST_NAME_INVALID")
@@ -33,6 +38,8 @@ public class UserCreationRequest {
     @Size(min = 3, message = "FIRST_NAME_INVALID")
     String firstName;
 
+    // the email (RFC5322) does not contain:
+    // (|) and (') characters
     @Email(message = "EMAIL_INVALID", regexp = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$")
     String email;
 

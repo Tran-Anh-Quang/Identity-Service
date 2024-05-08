@@ -48,7 +48,7 @@ public class UserControllerTest {
                 .firstName("quang")
                 .lastName("tran")
                 .email("test02@gmail.com")
-                .password("12345678")
+                .password("Quang09122002@")
                 .dob(dob)
                 .build();
 
@@ -94,7 +94,8 @@ public class UserControllerTest {
         objectMapper.registerModule(new JavaTimeModule());
         String content = objectMapper.writeValueAsString(request);
 
-        //        when(userService.createUser(any())).thenReturn(response);    // Because method return response of
+        // when(userService.createUser(any())).thenReturn(response);
+        // Because method return response of
         // @Size of Validation library
         // So don't need to mock to the Service
 

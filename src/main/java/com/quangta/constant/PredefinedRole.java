@@ -1,6 +1,5 @@
 package com.quangta.constant;
 
-
 public class PredefinedRole {
 
     public static final String USER_ROLE = "USER";

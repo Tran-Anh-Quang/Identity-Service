@@ -20,7 +20,6 @@ public class UserResponse {
     String firstName;
     String email;
     String phoneNumber;
-
     LocalDate dob;
     Set<RoleResponse> roles;
 }

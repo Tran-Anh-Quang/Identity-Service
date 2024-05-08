@@ -45,8 +45,9 @@ public class UserServiceTest {
                 .firstName("quang")
                 .lastName("tran")
                 .email("test02@gmail.com")
-                .password("12345678")
+                .password("Quang09122002@")
                 .dob(dob)
+                .phoneNumber("0563016466")
                 .build();
 
         response = UserResponse.builder()
@@ -56,6 +57,7 @@ public class UserServiceTest {
                 .lastName("tran")
                 .email("test02@gmail.com")
                 .dob(dob)
+                .phoneNumber("0563016466")
                 .build();
 
         user = User.builder()
@@ -65,13 +67,14 @@ public class UserServiceTest {
                 .lastName("tran")
                 .email("test02@gmail.com")
                 .dob(dob)
+                .phoneNumber("0563016466")
                 .build();
     }
 
     @Test
     public void createUser_validRequest_success() {
         // GIVEN
-        when(userRepository.existsByUsername(anyString())).thenReturn(false);
+        when(userRepository.existsByPhoneNumber(anyString())).thenReturn(false);
         when(userRepository.save(any())).thenReturn(user);
 
         // WHEN
@@ -79,7 +82,7 @@ public class UserServiceTest {
 
         // THEN
         Assertions.assertThat(response.getId()).isEqualTo("42e2-bae5-9ea7c0f1c4d4");
-        Assertions.assertThat(response.getUsername()).isEqualTo("test02");
+        Assertions.assertThat(response.getPhoneNumber()).isEqualTo("0563016466");
     }
 
     @Test
@@ -100,7 +103,7 @@ public class UserServiceTest {
             roles = {"USER"})
     public void getProfile_validRequest_success() {
         // GIVEN
-        when(userRepository.findByUsername(anyString())).thenReturn(Optional.of(user));
+        when(userRepository.findByPhoneNumber(anyString())).thenReturn(Optional.of(user));
 
         // WHEN
         var response = userService.getProfile();
@@ -116,7 +119,7 @@ public class UserServiceTest {
             roles = {"USER"})
     public void getProfile_invalidRequest_fail() {
         // GIVEN
-        when(userRepository.findByUsername(anyString())).thenReturn(Optional.ofNullable(null));
+        when(userRepository.findByPhoneNumber(anyString())).thenReturn(Optional.ofNullable(null));
 
         // WHEN
         var exception = assertThrows(AppException.class, () -> userService.getProfile());

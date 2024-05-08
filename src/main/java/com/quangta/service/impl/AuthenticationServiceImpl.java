@@ -117,9 +117,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         var phoneNumber = signedJwt.getJWTClaimsSet().getSubject();
 
-        var user =
-                userRepository.findByPhoneNumber(phoneNumber)
-                        .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        var user = userRepository
+                .findByPhoneNumber(phoneNumber)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         var token = generateToken(user);
 

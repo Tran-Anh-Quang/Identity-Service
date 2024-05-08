@@ -10,7 +10,8 @@ import lombok.experimental.FieldDefaults;
 @Entity
 @Table(name = "users")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -29,4 +30,5 @@ public class User {
 
     @ManyToMany
     Set<Role> roles;
+
 }

@@ -26,6 +26,7 @@ public class SecurityConfig {
         "/api/v1/auth/verify-token",
         "/api/v1/auth/refresh-token",
         "/api/v1/auth/logout",
+        "/api/v1/forgot-password/**",
     };
 
     private final CustomJwtDecoder customJwtDecoder;

@@ -44,10 +44,10 @@ public class UserServiceImpl implements UserService {
         if (userRepository.existsByUsername(request.getUsername())) {
             throw new AppException(ErrorCode.USER_EXISTED);
         }
-        if (userRepository.existsByPhoneNumber(request.getPhoneNumber())) {
+        if (Boolean.TRUE.equals(userRepository.existsByPhoneNumber(request.getPhoneNumber()))) {
             throw new AppException(ErrorCode.PHONE_NUMBER_EXISTED);
         }
-        if (userRepository.existsByEmail(request.getEmail())) {
+        if (Boolean.TRUE.equals(userRepository.existsByEmail(request.getEmail()))) {
             throw new AppException(ErrorCode.EMAIL_EXISTED);
         }
 
@@ -68,7 +68,9 @@ public class UserServiceImpl implements UserService {
         var contextHolder = SecurityContextHolder.getContext();
         String phoneNumber = contextHolder.getAuthentication().getName();
 
-        User user = userRepository.findByPhoneNumber(phoneNumber).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        User user = userRepository
+                .findByPhoneNumber(phoneNumber)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         return userMapper.mapToUserResponse(user);
     }
