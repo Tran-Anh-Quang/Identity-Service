@@ -12,10 +12,7 @@ import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
-import com.quangta.dto.request.AuthenticationRequest;
-import com.quangta.dto.request.IntrospectRequest;
-import com.quangta.dto.request.LogoutRequest;
-import com.quangta.dto.request.RefreshTokenRequest;
+import com.quangta.dto.request.*;
 import com.quangta.dto.response.AuthenticationResponse;
 import com.quangta.dto.response.IntrospectResponse;
 import com.quangta.entity.InvalidToken;
@@ -46,6 +43,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     InvalidTokenRepository invalidTokenRepository;
 
+    PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+
     @NonFinal
     @Value("${jwt.signerKey}")
     protected String SIGNER_KEY;
@@ -63,8 +62,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         var user = userRepository
                 .findByPhoneNumber(request.getPhoneNumber())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
 
         boolean authenticated = passwordEncoder.matches(request.getPassword(), user.getPassword());
 
@@ -195,5 +192,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             isValid = false;
         }
         return IntrospectResponse.builder().valid(isValid).build();
+    }
+
+    @Override
+    public void forgotPassword(ForgotPasswordRequest request){
+            if (!request.getPassword().equals(request.getConfirmPassword())) {
+                throw new AppException(ErrorCode.PASSWORD_MISMATCH);
+            }
+            userRepository.updatePassword(request.getEmail(), request.getConfirmPassword());
     }
 }

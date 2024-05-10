@@ -30,4 +30,7 @@ public class User {
 
     @ManyToMany
     Set<Role> roles;
+
+    @OneToOne(mappedBy = "user")
+    private OtpViaEmail otpViaEmail;
 }

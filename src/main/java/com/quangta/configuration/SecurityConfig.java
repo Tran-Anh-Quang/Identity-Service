@@ -21,12 +21,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     private static final String[] PUBLIC_ENDPOINT = {
-        "/api/v1/users/register",
-        "/api/v1/auth/login",
-        "/api/v1/auth/verify-token",
-        "/api/v1/auth/refresh-token",
-        "/api/v1/auth/logout",
-        "/api/v1/forgot-password/**",
+        "/api/v1/users/register", "/api/v1/auth/**", "/api/v1/forgot-password/**",
     };
 
     private final CustomJwtDecoder customJwtDecoder;

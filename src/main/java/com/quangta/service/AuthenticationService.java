@@ -3,10 +3,7 @@ package com.quangta.service;
 import java.text.ParseException;
 
 import com.nimbusds.jose.JOSEException;
-import com.quangta.dto.request.AuthenticationRequest;
-import com.quangta.dto.request.IntrospectRequest;
-import com.quangta.dto.request.LogoutRequest;
-import com.quangta.dto.request.RefreshTokenRequest;
+import com.quangta.dto.request.*;
 import com.quangta.dto.response.AuthenticationResponse;
 import com.quangta.dto.response.IntrospectResponse;
 import com.quangta.entity.User;
@@ -24,4 +21,6 @@ public interface AuthenticationService {
     void logout(LogoutRequest request) throws ParseException, JOSEException;
 
     IntrospectResponse introspect(IntrospectRequest request) throws JOSEException, ParseException;
+
+    void forgotPassword(ForgotPasswordRequest request);
 }

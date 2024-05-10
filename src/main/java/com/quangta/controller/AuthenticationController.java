@@ -3,13 +3,8 @@ package com.quangta.controller;
 import java.text.ParseException;
 
 import com.nimbusds.jose.JOSEException;
-import com.quangta.dto.request.AuthenticationRequest;
-import com.quangta.dto.request.IntrospectRequest;
-import com.quangta.dto.request.LogoutRequest;
-import com.quangta.dto.request.RefreshTokenRequest;
-import com.quangta.dto.response.ApiResponse;
-import com.quangta.dto.response.AuthenticationResponse;
-import com.quangta.dto.response.IntrospectResponse;
+import com.quangta.dto.request.*;
+import com.quangta.dto.response.*;
 import com.quangta.service.AuthenticationService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -55,5 +50,13 @@ public class AuthenticationController {
         authenticationService.logout(request);
 
         return ApiResponse.<Void>builder().build();
+    }
+
+    @PostMapping("/forgot-password")
+    public ApiResponse<String> forgotPassword(@RequestBody ForgotPasswordRequest request) throws Exception {
+        authenticationService.forgotPassword(request);
+        return ApiResponse.<String>builder()
+                .message("Password has been reset successfully")
+                .build();
     }
 }

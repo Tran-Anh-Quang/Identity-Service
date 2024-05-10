@@ -32,6 +32,7 @@ public enum ErrorCode {
     EMAIL_EXISTED(1013, "Your email has already existed", HttpStatus.BAD_REQUEST),
     LAST_NAME_INVALID(1014, "Last name must be at least {min} characters", HttpStatus.BAD_REQUEST),
     FIRST_NAME_INVALID(1015, "First name must be at least {min} characters", HttpStatus.BAD_REQUEST),
+    PASSWORD_MISMATCH(1016, "Password mismatch", HttpStatus.BAD_REQUEST),
     ;
     int code;
     String message;

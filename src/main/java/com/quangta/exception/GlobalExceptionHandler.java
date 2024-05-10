@@ -39,6 +39,17 @@ public class GlobalExceptionHandler {
                         .build());
     }
 
+    @ExceptionHandler(value = OTPException.class)
+    ResponseEntity<ApiResponse> handleAppException(OTPException e) {
+        OTPErrorCode errorCode = e.getErrorCode();
+
+        return ResponseEntity.status(errorCode.getHttpStatusCode())
+                .body(ApiResponse.builder()
+                        .code(errorCode.getCode())
+                        .message(errorCode.getMessage())
+                        .build());
+    }
+
     @ExceptionHandler(value = AccessDeniedException.class)
     ResponseEntity<ApiResponse> handleAccessDeniedException(AccessDeniedException e) {
         ErrorCode errorCode = ErrorCode.UNAUTHORIZED;
