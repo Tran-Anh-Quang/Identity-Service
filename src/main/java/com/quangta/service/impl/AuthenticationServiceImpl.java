@@ -195,11 +195,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public void forgotPassword(ForgotPasswordRequest request){
-            if (!request.getPassword().equals(request.getConfirmPassword())) {
-                throw new AppException(ErrorCode.PASSWORD_MISMATCH);
-            }
-            String newPassword = passwordEncoder.encode(request.getConfirmPassword());
-            userRepository.updatePassword(request.getEmail(), newPassword);
+    public void forgotPassword(ForgotPasswordRequest request) {
+        if (!request.getPassword().equals(request.getConfirmPassword())) {
+            throw new AppException(ErrorCode.PASSWORD_MISMATCH);
+        }
+        String newPassword = passwordEncoder.encode(request.getConfirmPassword());
+        userRepository.updatePassword(request.getEmail(), newPassword);
     }
 }
