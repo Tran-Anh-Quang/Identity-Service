@@ -199,6 +199,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             if (!request.getPassword().equals(request.getConfirmPassword())) {
                 throw new AppException(ErrorCode.PASSWORD_MISMATCH);
             }
-            userRepository.updatePassword(request.getEmail(), request.getConfirmPassword());
+            String newPassword = passwordEncoder.encode(request.getConfirmPassword());
+            userRepository.updatePassword(request.getEmail(), newPassword);
     }
 }
