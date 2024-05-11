@@ -23,4 +23,6 @@ public interface AuthenticationService {
     IntrospectResponse introspect(IntrospectRequest request) throws JOSEException, ParseException;
 
     void forgotPassword(ForgotPasswordRequest request);
+
+    void changePassword(String userId, ChangePasswordRequest request);
 }

@@ -202,4 +202,18 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         String newPassword = passwordEncoder.encode(request.getConfirmPassword());
         userRepository.updatePassword(request.getEmail(), newPassword);
     }
+
+    @Override
+    public void changePassword(String userId, ChangePasswordRequest request) {
+            var user = userRepository
+                    .findById(userId)
+                    .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+            if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
+                throw new AppException(ErrorCode.INVALID_OLD_PASSWORD);
+            }
+
+            String newPassword = passwordEncoder.encode(request.getNewPassword());
+            userRepository.changePassword(userId, newPassword);
+    }
 }

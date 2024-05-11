@@ -9,10 +9,7 @@ import com.quangta.service.AuthenticationService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -53,10 +50,18 @@ public class AuthenticationController {
     }
 
     @PostMapping("/forgot-password")
-    public ApiResponse<String> forgotPassword(@RequestBody ForgotPasswordRequest request) throws Exception {
+    public ApiResponse<String> forgotPassword(@RequestBody ForgotPasswordRequest request){
         authenticationService.forgotPassword(request);
         return ApiResponse.<String>builder()
                 .message("Password has been reset successfully")
+                .build();
+    }
+
+    @PostMapping("/change-password/{userId}")
+    public ApiResponse<String> changePassword(@PathVariable String userId, @RequestBody ChangePasswordRequest request){
+        authenticationService.changePassword(userId, request);
+        return ApiResponse.<String>builder()
+                .message("Password has been change successfully")
                 .build();
     }
 }

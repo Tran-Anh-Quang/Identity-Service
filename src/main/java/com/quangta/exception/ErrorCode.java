@@ -33,6 +33,7 @@ public enum ErrorCode {
     LAST_NAME_INVALID(1014, "Last name must be at least {min} characters", HttpStatus.BAD_REQUEST),
     FIRST_NAME_INVALID(1015, "First name must be at least {min} characters", HttpStatus.BAD_REQUEST),
     PASSWORD_MISMATCH(1016, "Password mismatch", HttpStatus.BAD_REQUEST),
+    INVALID_OLD_PASSWORD(1017, "Old password is invalid", HttpStatus.BAD_REQUEST)
     ;
     int code;
     String message;
