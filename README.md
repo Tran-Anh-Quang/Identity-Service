@@ -1,7 +1,7 @@
-# Learn-Springboot
+# Identity-Service
 
 ## Description
-Learn-Springboot is a project aimed at exploring Spring Boot framework functionalities. This project utilizes various dependencies to enable the development of RESTful web services with data persistence, validation, security, and testing capabilities.
+Identity-Service is a project aimed at exploring Spring Boot framework functionalities. This project utilizes various dependencies to enable the development of RESTful web services with data persistence, validation, security, and testing capabilities.
 
 ## Dependencies
 - **spring-boot-starter-data-jpa**: Provides support for Java Persistence API (JPA) including Hibernate implementation.
