@@ -55,6 +55,7 @@ public class ApplicationConfig {
 
                 User user = User.builder()
                         .username(ADMIN_USER_NAME)
+                        .phoneNumber("8888888888")
                         .password(passwordEncoder.encode(ADMIN_PASSWORD))
                         .roles(roles)
                         .build();
